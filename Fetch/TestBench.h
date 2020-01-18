@@ -7,6 +7,7 @@
 
 SC_MODULE(TestBench){
 
+	sc_in< sc_uint<16> > out;
 	sc_in< sc_uint<16> > inst;
 	sc_in<bool> clk;
 
@@ -17,13 +18,20 @@ SC_MODULE(TestBench){
 			std::cout << inst.read().range(16-(i+1), 16-(i+1));
 		}
 
-		std::cout << " | " << std::setw(5) << inst.read() << " | " << clk.read() << std::endl;
+		std::cout << " | ";
+
+		for(int i = 0; i < 16 ; i++){
+
+			std::cout << out.read().range(16-(i+1), 16-(i+1));
+		}
+
+		std::cout << " | " << clk.read() <<std::endl;
 
 	}
 
 	void test(){
 
-		std::cout <<"Instruction      | Value | CLK" << std::endl;
+		std::cout <<"Pipe Entrance    | Pipe Exit        | CLK" << std::endl;
 
 		for(int i = 0; i < 5 ; i++){
 
@@ -39,7 +47,7 @@ SC_MODULE(TestBench){
 	SC_CTOR(TestBench){
 
 		SC_THREAD(test);
-		sensitive << clk.neg();
+		sensitive << clk.pos();
 
 	}
 

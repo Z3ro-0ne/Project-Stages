@@ -3,12 +3,15 @@
 
 #include <systemc.h>
 #include <fstream>
+#include <Pipe.h>
 
 SC_MODULE(Fetch){
 
 	ifstream isa_file;
 	sc_in<bool> clk;
 	sc_out< sc_uint<16> > inst;
+	sc_out< sc_uint<16> > out;
+	Pipe *pipe;
 
 	void fetch(){
 
@@ -28,15 +31,22 @@ SC_MODULE(Fetch){
 
 	SC_CTOR(Fetch){
 
+		pipe = new Pipe("pipe");
+
 		isa_file.open("ISA.txt");
 		SC_METHOD(fetch);
 		sensitive << clk.neg();
+
+		pipe -> clk(clk);
+		pipe -> input(inst);
+		pipe -> out(out);
 
 	}
 
 	~Fetch(){
 
 		isa_file.close();
+		delete pipe;
 
 	}
 

@@ -13,11 +13,14 @@ int sc_main(int argv, char* argc[]){
   	TestBench tb("tb");
 
   	sc_signal< sc_uint<16> > inst;
+    sc_signal< sc_uint<16> > out;
 
   	ft.inst(inst);
+    ft.out(out);
   	ft.clk(clock);
 
   	tb.inst(inst);
+    tb.out(out);
   	tb.clk(clock);
 
   	sc_start();
