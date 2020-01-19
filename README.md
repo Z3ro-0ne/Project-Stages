@@ -3,7 +3,7 @@ In this repository you can find the different stages in a microprocessor. Here y
 # SystemC installation
 To start with your project you need to install systemc. All the steps you must follow for this task are detailed and specified in the following link: https://github.com/juliolugo96/computer_architecture
 # Basic microprocessor design
-![Uploading 20200119_111007.jpg…]()
+![20200119_111007](https://user-images.githubusercontent.com/57911812/72683615-53edc280-3aaf-11ea-95a2-3fb4cd5d2565.jpg)
 # Authors
 Jaider Marquina - V027241325
 Jesus Mendoza - V026765507
