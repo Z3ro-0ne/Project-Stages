@@ -1,10 +1,10 @@
-#ifndef REGISTERMEMORY_H
-#define REGISTERMEMORY_H
+#ifndef  REGISTERMEMORY_H
+#define  REGISTERMEMORY_H
 
-#include <systemc.h>
 #include <Decode.h>
 #include <Cache.h>
 #include <Pipe2.h>
+#include <TestBench.h>
 
 SC_MODULE(RegisterMemory){
 
@@ -12,55 +12,53 @@ SC_MODULE(RegisterMemory){
 	sc_in<bool> clk;
 
 	sc_out< sc_uint<4> > inst, data1, data2, data3;
+	sc_out< sc_uint<16> > instruction_og;
 
-	Decode *decode;
 	Cache *cache;
+	Decode *decode;
 	Pipe2 *pipe2;
 
-	sc_signal< sc_uint<4> > inst_decode_sg, op1_out_sg, op2_out_sg, op3_out_sg;
-	sc_signal< sc_uint<4> > inst_cache_sg, data1_cache_sg, data2_cache_sg, data3_cache_sg;
+	sc_signal< sc_uint<4> > decode_inst_sg, decode_op1_sg, decode_op2_sg, decode_op3_sg;
+	sc_signal< sc_uint<4> > cache_inst_sg, cache_data1_sg, cache_data2_sg, cache_data3_sg;
+	sc_signal< sc_uint<16> > sg1, sg2;
 
 	SC_CTOR(RegisterMemory){
 
-		decode = new Decode("decode");
-		cache = new Cache("cache");
-		pipe2 = new Pipe2("pipe2");
+		cache = new Cache("Cache");
+		decode =  new Decode("Decode");
+		pipe2 = new Pipe2("Pipe2");
 
 		decode -> inst_in(instruction_in);
-		decode -> inst_out(inst_decode_sg);
-		decode -> op1(op1_out_sg);
-		decode -> op2(op2_out_sg);
-		decode -> op3(op3_out_sg);
+		decode -> inst_out(decode_inst_sg);
+		decode -> op1(decode_op1_sg);
+		decode -> op2(decode_op2_sg);
+		decode -> op3(decode_op3_sg);
+		decode -> instruction(sg1);
 
 		cache -> clk(clk);
-		cache -> dir_inst(inst_decode_sg);
-		cache -> dir1(op1_out_sg);
-		cache -> dir2(op2_out_sg);
-		cache -> dir3(op3_out_sg);
-		cache -> inst_out(inst_cache_sg);
-		cache -> data1_out(data1_cache_sg);
-		cache -> data2_out(data2_cache_sg);
-		cache -> data3_out(data3_cache_sg);
+		cache -> dir_inst(decode_inst_sg);
+		cache -> dir1(decode_op1_sg);
+		cache -> dir2(decode_op2_sg);
+		cache -> dir3(decode_op3_sg);
+		cache -> inst_out(cache_inst_sg);
+		cache -> data1_out(cache_data1_sg);
+		cache -> data2_out(cache_data2_sg);
+		cache -> data3_out(cache_data3_sg);
+		cache -> instruction(sg1);
+		cache -> chain(sg2);
 
 		pipe2 -> clk(clk);
-		pipe2 -> inst_in(inst_cache_sg);
-		pipe2 -> data1_in(data1_cache_sg);
-		pipe2 -> data2_in(data2_cache_sg);
-		pipe2 -> data3_in(data3_cache_sg);
+		pipe2 -> inst_in(cache_inst_sg);
+		pipe2 -> data1_in(cache_data1_sg);
+		pipe2 -> data2_in(cache_data2_sg);
+		pipe2 -> data3_in(cache_data3_sg);
 		pipe2 -> inst_out(inst);
 		pipe2 -> data1_out(data1);
 		pipe2 -> data2_out(data2);
 		pipe2 -> data3_out(data3);
+		pipe2 -> chain(sg2);
+		pipe2 -> instruction(instruction_og);
 
-
-	}
-
-
-	~RegisterMemory(){
-
-		delete pipe2;
-		delete decode;
-		delete cache;
 	}
 
 };
