@@ -16,7 +16,7 @@ SC_MODULE(ALU){
 	Substract *substract;
 	Pipe3 *pipe3;
 
-	sc_signal< sc_uint<8> > sg1;
+	sc_signal< sc_uint<8> > sg1, sg2;
 
 	void alu(){
 
@@ -38,10 +38,10 @@ SC_MODULE(ALU){
 
 				substract -> a_in(op2);
 				substract -> b_in(op3);
-				substract -> out(sg1);
+				substract -> out(sg2);
 
 				pipe3 ->clk(clk);
-				pipe3 -> alu(sg1);
+				pipe3 -> alu(sg2);
 				pipe3 -> alu_result(alu_out);
 
 			break;

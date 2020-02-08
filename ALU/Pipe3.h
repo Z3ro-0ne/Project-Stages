@@ -5,7 +5,7 @@
 
 SC_MODULE(Pipe3){
 
-	sc_in< sc_uint<4> > alu;
+	sc_in< sc_uint<8> > alu;
 	sc_in<bool> clk;
 
 	sc_out< sc_uint<8> > alu_result;
