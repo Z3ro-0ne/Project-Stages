@@ -18,7 +18,12 @@ SC_MODULE(ALU){
 
 	sc_signal< sc_uint<8> > sg1, sg2;
 
-	void alu(){
+	
+	SC_CTOR(ALU){
+
+		adder = new Adder("adder");
+		substract = new Substract("substract");
+		pipe3 =  new Pipe3("pipe3");
 
 		switch(inst.read()){
 
@@ -40,7 +45,7 @@ SC_MODULE(ALU){
 				substract -> b_in(op3);
 				substract -> out(sg2);
 
-				pipe3 ->clk(clk);
+				pipe3 -> clk(clk);
 				pipe3 -> alu(sg2);
 				pipe3 -> alu_result(alu_out);
 
@@ -58,17 +63,6 @@ SC_MODULE(ALU){
 		delete substract;
 		delete adder;
 		delete pipe3;
-
-	}
-
-	SC_CTOR(ALU){
-
-		adder = new Adder("adder");
-		substract = new Substract("substract");
-		pipe3 =  new Pipe3("pipe3");
-
-		SC_METHOD(alu);
-			sensitive << inst << op2 << op3;
 
 	}
 	
