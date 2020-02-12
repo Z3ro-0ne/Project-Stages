@@ -5,6 +5,8 @@
 #include <Adder.h>
 #include <Substract.h>
 #include <Pipe3.h>
+#include <Selecter.h>
+#include <Selection.h>
 
 SC_MODULE(ALU){
 
@@ -15,8 +17,11 @@ SC_MODULE(ALU){
 	Adder *adder;
 	Substract *substract;
 	Pipe3 *pipe3;
+	Selecter *selecter;
+	Selection *selection;
 
-	sc_signal< sc_uint<8> > alu_out_sg;
+	sc_signal< sc_uint<8> > add_sg, sub_sg, result_sg;
+	sc_signal< sc_uint<2> > choice_sg;
 
 	
 	SC_CTOR(ALU){
@@ -24,26 +29,27 @@ SC_MODULE(ALU){
 		adder = new Adder("adder");
 		substract = new Substract("substract");
 		pipe3 =  new Pipe3("pipe3");
+		selecter = new Selecter("selecter");
+		selection = new Selection("selection");
 
-		if(inst.read() == 2){
+		selecter -> inst_in(inst);
+		selecter -> choice(choice_sg);
 
-			adder -> a_in(op2);
-			adder -> b_in(op3);
-			adder -> out(alu_out_sg);
+		adder -> a_in(op2);
+		adder -> b_in(op3);
+		adder -> out(add_sg);
 
-		} else {
+		substract -> a_in(op2);
+		substract -> b_in(op3);
+		substract -> out(sub_sg);
 
-			if(inst.read() == 3){
+		selection -> add_in(add_sg);
+		selection -> sub_in(sub_sg);
+		selection -> choice(choice_sg);
+		selection -> result(result_sg);
 
-				substract -> a_in(op2);
-				substract -> b_in(op3);
-				substract -> out(alu_out_sg);
-
-			}
-
-		}
-
-		pipe3 -> alu(alu_out_sg);
+		pipe3 -> clk(clk);
+		pipe3 -> alu(result_sg);
 		pipe3 -> alu_result(alu_out);
 
 
@@ -54,6 +60,8 @@ SC_MODULE(ALU){
 		delete substract;
 		delete adder;
 		delete pipe3;
+		delete selection;
+		delete selecter;
 
 	}
 	

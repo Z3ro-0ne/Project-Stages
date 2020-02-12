@@ -13,7 +13,7 @@ SC_MODULE(TestBench){
 
 	void test(){
 
-		inst.write(1);
+		inst.write(0);
 		op1.write(0);
 		op2.write(1);
 		op3.write(1);
@@ -27,7 +27,7 @@ SC_MODULE(TestBench){
 		wait();
 		output();
 
-		inst.write(2);
+		inst.write(1);
 		op1.write(0);
 		op2.write(2);
 		op3.write(1);
@@ -46,7 +46,7 @@ SC_MODULE(TestBench){
 
 	void output(){
 
-		std::cout<< inst.read() << "||" << op2.read() << "+" << op3.read() << "=" << alu_out.read();
+		std::cout<< inst.read() << "||" << op2.read() << "+" << op3.read() << "=" << alu_out.read() << std::endl;
 	
 	}
 
