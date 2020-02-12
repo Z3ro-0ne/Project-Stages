@@ -16,7 +16,7 @@ SC_MODULE(ALU){
 	Substract *substract;
 	Pipe3 *pipe3;
 
-	sc_signal< sc_uint<8> > sg1, sg2;
+	sc_signal< sc_uint<8> > alu_out_sg;
 
 	
 	SC_CTOR(ALU){
@@ -25,36 +25,27 @@ SC_MODULE(ALU){
 		substract = new Substract("substract");
 		pipe3 =  new Pipe3("pipe3");
 
-		switch(inst.read()){
+		if(inst.read() == 2){
 
-			case 1: 
+			adder -> a_in(op2);
+			adder -> b_in(op3);
+			adder -> out(alu_out_sg);
 
-				adder -> a_in(op2);
-				adder -> b_in(op3);
-				adder -> out(sg1);
+		} else {
 
-				pipe3 -> clk(clk);
-				pipe3 -> alu(sg1);
-				pipe3 -> alu_result(alu_out);
-
-			break;
-
-			case 2: 
+			if(inst.read() == 3){
 
 				substract -> a_in(op2);
 				substract -> b_in(op3);
-				substract -> out(sg2);
+				substract -> out(alu_out_sg);
 
-				pipe3 -> clk(clk);
-				pipe3 -> alu(sg2);
-				pipe3 -> alu_result(alu_out);
-
-			break;
-
-			default: break;
-
+			}
 
 		}
+
+		pipe3 -> alu(alu_out_sg);
+		pipe3 -> alu_result(alu_out);
+
 
 	}
 
