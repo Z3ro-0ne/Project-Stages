@@ -9,8 +9,9 @@ SC_MODULE(Fetch){
 
 	ifstream isa_file;
 	sc_in<bool> clk;
-	sc_out< sc_uint<16> > inst;
 	sc_out< sc_uint<16> > out;
+
+	sc_uint<16> inst;
 	Pipe *pipe;
 
 	void fetch(){
